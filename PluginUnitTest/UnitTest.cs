@@ -19,8 +19,8 @@ namespace PluginUnitTest
             string error = string.Empty;
             parameters.Add("campaignname", "Test");
             parameters.Add("type", "load_page_plugin");
-            parameters.Add("url", "https://google.com");
-
+            parameters.Add("url", "https://google.com")
+            
             hc.pluginHandler(parameters, out error);
 
             Assert.AreEqual("", error);

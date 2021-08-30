@@ -8,6 +8,7 @@ using System.IO;
 using System.Data;
 using System.Net;
 using System.Threading;
+using CefBrowserWrapper;
 
 namespace Plugin
 {
@@ -29,54 +30,29 @@ namespace Plugin
         public object pluginHandler(Dictionary<string, object> parameters, out string error)
         {
             string retVal = "";
-            try
+            //try
+            //{
+            error = "";
+
+            //Проверяем правильно ли подключен плагин в программе
+            if (String.Compare(parameters["type"].ToString(), "after_load_page_plugin") != 0)
             {
-                error = "";
-
-                //Проверяем правильно ли подключен плагин в программе
-                if (String.Compare(parameters["type"].ToString(), "load_page_plugin") != 0)
-                {
-                    throw new Exception("Вы используете неверный тип плагина");
-                }
-
-                //параметр URL текущей страницы
-                string url = parameters["url"].ToString();
-                
-                #region Дополнительные возможные параметры (можно использовать при необходимости)
-                                
-                ////параметр уровень вложенности загружаемой страницы
-                //int nestinglevel = Convert.ToInt32(parameters["nestinglevel"].ToString());
-                ////параметр реферер для загружаемой страницы
-                //string referer = parameters["referer"].ToString();
-                ////параметр флаг использования прокси при загрузке
-                //bool useproxy = Convert.ToBoolean(parameters["useproxy"].ToString());
-                ////параметр объект Загрузчик Datacol
-                //DatacolHttp http = (DatacolHttp)parameters["datacolhttp"];
-                ////параметр имя прокси чекера
-                //string checkername = parameters["checkername"].ToString();
-                ////параметр режим использования прокси (список или из прокси чекера)
-                //string proxymode = parameters["proxymode"].ToString();
-                ////параметр предопределенный прокси для загрузки страницы
-                //WebProxy webproxy = (WebProxy)parameters["webproxy"];
-                ////параметр предопределенная кодировка загружаемой страницы
-                //string encoding = parameters["encoding"].ToString();
-                //WebProxy usedProxy = new WebProxy();
-
-                #endregion
-
-                #region ВАШ КОД
-
-                retVal = "loaded url pagecode";
-
-                #endregion
-
-                return retVal;
+                throw new Exception("Вы используете неверный тип плагина");
             }
-            catch (Exception exp)
-            {
-                error = exp.Message;
-                return "";
-            }
+            //throw new TimeoutException();
+            //параметр URL текущей страницы
+            string url = parameters["url"].ToString();
+            CancellationToken ct = (CancellationToken)parameters["cancellation_token"];
+            CefBrowserWrapperBase cefBrowserWrapper = (CefBrowserWrapperBase)parameters["cef_browser_wrapper"];
+
+
+            #region ВАШ КОД
+
+            cefBrowserWrapper.EvaluateScript("alert('hi');");
+
+            #endregion
+
+            return retVal;
         }
 
         #region Методы и свойства необходимые, для соответствия PluginInterface (обычно не используются при создании плагина)
