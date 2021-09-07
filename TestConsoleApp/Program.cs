@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 
 namespace TestConsoleApp
 {
@@ -13,7 +14,7 @@ namespace TestConsoleApp
     {
         static void Main(string[] args)
         {
-            string url = "https://google.com";
+            string url = "https://realty.yandex.ru/offer/3051747157343456116/?isExact=YES&source=serp_offers_item";
             HandlerClass hc = new HandlerClass();
 
             Dictionary<string, object> parameters = new Dictionary<string, object>();
@@ -24,15 +25,18 @@ namespace TestConsoleApp
             parameters.Add("cancellation_token", CancellationToken.None);
             
             CefBrowserWrapperFactoryBase factory = new UniCefBrowserWrapperFactory(true);
-            CefBrowserWrapperBase cefBrowserWrapper = factory.Create(true, true, 10000, true, new SingleBrowserInfo("", ""));
+            CefBrowserWrapperBase cefBrowserWrapper = factory.Create(true, true, 10000, false, new SingleBrowserInfo("", ""));
             parameters.Add("cef_browser_wrapper", cefBrowserWrapper);
 
             try
             {
+                cefBrowserWrapper.ChangeWindowState(FormWindowState.Maximized);
                 cefBrowserWrapper.LoadUrl(url);
 
                 hc.pluginHandler(parameters, out error);
 
+                Console.WriteLine("Click any button to finish");
+                Console.ReadKey();
 
                 cefBrowserWrapper.Dispose();
                 factory.Dispose();

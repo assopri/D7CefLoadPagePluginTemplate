@@ -47,9 +47,12 @@ namespace Plugin
 
 
             #region ВАШ КОД
+            //cefBrowserWrapper.Scroll("//span[contains(text(),'Показать телефон')]");
+            //Thread.Sleep(2000);
+            cefBrowserWrapper.SendMouseDownToElement("//span[contains(text(),'Показать телефон')]");
 
-            cefBrowserWrapper.EvaluateScript("alert('hi');");
-
+            cefBrowserWrapper.GetHtml();
+            // cefBrowserWrapper.u
             #endregion
 
             return retVal;
