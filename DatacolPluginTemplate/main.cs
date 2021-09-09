@@ -9,6 +9,8 @@ using System.Data;
 using System.Net;
 using System.Threading;
 using CefBrowserWrapper;
+using System.Diagnostics;
+using System.Windows.Forms;
 
 namespace Plugin
 {
@@ -47,9 +49,28 @@ namespace Plugin
 
 
             #region ВАШ КОД
+
+            cefBrowserWrapper.ChangeWindowState(FormWindowState.Maximized);
+            cefBrowserWrapper.SetValue("//input[@name='search_name']", "test1");
+            //the same as set value, but imitating real user (real event option in Datacol scenarios)
+            cefBrowserWrapper.SendTextToElement("//input[@name='search_price_from']", "test2"); 
+
+            cefBrowserWrapper.SendMouseClickToElement("//input[@id='ctrl-prd-cmp-3942']");
+
+            Console.WriteLine("Do smth or just see what is going on in browser and click any button to click");
+            Console.ReadKey();
+
+            cefBrowserWrapper.Click("//input[@name='advanced_search_in_category']");
+
             //cefBrowserWrapper.Scroll("//span[contains(text(),'Показать телефон')]");
             //Thread.Sleep(2000);
-            cefBrowserWrapper.SendMouseDownToElement("//span[contains(text(),'Показать телефон')]");
+            //document.evaluate('//span[contains(text(),"Показать телефон")]', document, null, XPathResult.ANY_TYPE, null).iterateNext().getBoundingClientRect();
+            //Console.WriteLine(
+            //    cefBrowserWrapper.GetHtmlElementClientRect("//a[@class='submit']"));
+            //cefBrowserWrapper.GetHtmlElementClientRect("//span[contains(text(),'Показать телефон')]"));
+
+            // cefBrowserWrapper.SendMouseClickToElement("//span[contains(text(),'Показать телефон')]");
+            //cefBrowserWrapper.SendMouseClickToElement("//a[@class='submit']");
 
             cefBrowserWrapper.GetHtml();
             // cefBrowserWrapper.u

@@ -14,7 +14,9 @@ namespace TestConsoleApp
     {
         static void Main(string[] args)
         {
-            string url = "https://realty.yandex.ru/offer/3051747157343456116/?isExact=YES&source=serp_offers_item";
+            string url = "http://webasyst.synoparser.ru/index.php?categoryID=723";
+            // string url = "https://realty.yandex.ru/offer/3051747157343456116/?isExact=YES&source=serp_offers_item";
+            // string url = "https://kolchaka.net/seo/lsi-frazy-chto-eto-zachem-eto-gde-vzyat-kak-ispolzovat-v-tekste/";
             HandlerClass hc = new HandlerClass();
 
             Dictionary<string, object> parameters = new Dictionary<string, object>();
@@ -30,7 +32,7 @@ namespace TestConsoleApp
 
             try
             {
-                cefBrowserWrapper.ChangeWindowState(FormWindowState.Maximized);
+                
                 cefBrowserWrapper.LoadUrl(url);
 
                 hc.pluginHandler(parameters, out error);
