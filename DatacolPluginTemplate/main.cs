@@ -50,15 +50,21 @@ namespace Plugin
 
             #region ВАШ КОД
 
-            cefBrowserWrapper.ChangeWindowState(FormWindowState.Maximized);
+            // cefBrowserWrapper.ChangeWindowState(FormWindowState.Maximized);
+            cefBrowserWrapper.Scroll(100);
+            cefBrowserWrapper.EvaluateScript("alert('Push Enter to continue');"); 
+
+            cefBrowserWrapper.ScrollToElement("//input[@name='search_name']");
+            cefBrowserWrapper.EvaluateScript("alert('Push Enter to continue');");
+            
+            //Console.WriteLine("Do smth or just see what is going on in browser and click any button to click");
+            //Console.ReadKey();
+
             cefBrowserWrapper.SetValue("//input[@name='search_name']", "test1");
             //the same as set value, but imitating real user (real event option in Datacol scenarios)
             cefBrowserWrapper.SendTextToElement("//input[@name='search_price_from']", "test2"); 
 
             cefBrowserWrapper.SendMouseClickToElement("//input[@id='ctrl-prd-cmp-3942']");
-
-            Console.WriteLine("Do smth or just see what is going on in browser and click any button to click");
-            Console.ReadKey();
 
             cefBrowserWrapper.Click("//input[@name='advanced_search_in_category']");
 
