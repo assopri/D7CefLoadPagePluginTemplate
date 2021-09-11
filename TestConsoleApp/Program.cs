@@ -22,6 +22,7 @@ namespace TestConsoleApp
             Dictionary<string, object> parameters = new Dictionary<string, object>();
             string error = string.Empty;
             parameters.Add("campaignname", "Test");
+            parameters.Add("dev", "");
             parameters.Add("type", "after_load_page_plugin");
             parameters.Add("url", url);
             parameters.Add("cancellation_token", CancellationToken.None);

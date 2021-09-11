@@ -46,16 +46,16 @@ namespace Plugin
             string url = parameters["url"].ToString();
             CancellationToken ct = (CancellationToken)parameters["cancellation_token"];
             CefBrowserWrapperBase cefBrowserWrapper = (CefBrowserWrapperBase)parameters["cef_browser_wrapper"];
-
+            bool devMode = parameters.ContainsKey("dev");
 
             #region ВАШ КОД
 
             // cefBrowserWrapper.ChangeWindowState(FormWindowState.Maximized);
             cefBrowserWrapper.Scroll(100);
-            cefBrowserWrapper.EvaluateScript("alert('Push Enter to continue');"); 
+            if(devMode) cefBrowserWrapper.EvaluateScript("alert('Push Enter to continue');"); 
 
             cefBrowserWrapper.ScrollToElement("//input[@name='search_name']");
-            cefBrowserWrapper.EvaluateScript("alert('Push Enter to continue');");
+            if (devMode) cefBrowserWrapper.EvaluateScript("alert('Push Enter to continue');");
             
             //Console.WriteLine("Do smth or just see what is going on in browser and click any button to click");
             //Console.ReadKey();
