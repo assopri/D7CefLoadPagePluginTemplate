@@ -11,6 +11,7 @@ using System.Threading;
 using CefBrowserWrapper;
 using System.Diagnostics;
 using System.Windows.Forms;
+using CefSharp.Fluent;
 
 namespace Plugin
 {
@@ -41,14 +42,30 @@ namespace Plugin
             {
                 throw new Exception("Вы используете неверный тип плагина");
             }
-            //throw new TimeoutException();
-            //параметр URL текущей страницы
-            string url = parameters["url"].ToString();
+            ManualResetEventSlim downloadReadyEvent = new ManualResetEventSlim(false);
+        //параметр URL текущей страницы
+        string url = parameters["url"].ToString();
             CancellationToken ct = (CancellationToken)parameters["cancellation_token"];
             CefBrowserWrapperBase cefBrowserWrapper = (CefBrowserWrapperBase)parameters["cef_browser_wrapper"];
             bool devMode = parameters.ContainsKey("dev");
 
-            #region ВАШ КОД
+            cefBrowserWrapper.DownloadHandler = DownloadHandler.UseFolder("C:\\Users\\User\\Documents\\ViberDownloads",
+                        (chromiumBrowser, browser, downloadItem, callback) =>
+                        {
+                            if (downloadItem.IsComplete)
+                            {
+                                downloadReadyEvent.Set();
+                            }
+                        });
+
+            cefBrowserWrapper.Click("//a[@id='click_link_id']");
+
+            downloadReadyEvent.Wait(3000,ct);
+
+            //TODO: remove
+            return retVal;
+
+            #region TEMPLATE CODE
 
             // cefBrowserWrapper.ChangeWindowState(FormWindowState.Maximized);
             cefBrowserWrapper.Scroll(100);
@@ -57,8 +74,6 @@ namespace Plugin
             cefBrowserWrapper.ScrollToElement("//input[@name='search_name']");
             if (devMode) cefBrowserWrapper.EvaluateScript("alert('Push Enter to continue');");
             
-            //Console.WriteLine("Do smth or just see what is going on in browser and click any button to click");
-            //Console.ReadKey();
 
             cefBrowserWrapper.SetValue("//input[@name='search_name']", "test1");
             //the same as set value, but imitating real user (real event option in Datacol scenarios)
@@ -68,18 +83,8 @@ namespace Plugin
 
             cefBrowserWrapper.Click("//input[@name='advanced_search_in_category']");
 
-            //cefBrowserWrapper.Scroll("//span[contains(text(),'Показать телефон')]");
-            //Thread.Sleep(2000);
-            //document.evaluate('//span[contains(text(),"Показать телефон")]', document, null, XPathResult.ANY_TYPE, null).iterateNext().getBoundingClientRect();
-            //Console.WriteLine(
-            //    cefBrowserWrapper.GetHtmlElementClientRect("//a[@class='submit']"));
-            //cefBrowserWrapper.GetHtmlElementClientRect("//span[contains(text(),'Показать телефон')]"));
-
-            // cefBrowserWrapper.SendMouseClickToElement("//span[contains(text(),'Показать телефон')]");
-            //cefBrowserWrapper.SendMouseClickToElement("//a[@class='submit']");
-
             cefBrowserWrapper.GetHtml();
-            // cefBrowserWrapper.u
+
             #endregion
 
             return retVal;
