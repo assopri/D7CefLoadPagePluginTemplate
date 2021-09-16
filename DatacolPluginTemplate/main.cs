@@ -42,14 +42,27 @@ namespace Plugin
             {
                 throw new Exception("Вы используете неверный тип плагина");
             }
-            ManualResetEventSlim downloadReadyEvent = new ManualResetEventSlim(false);
-        //параметр URL текущей страницы
-        string url = parameters["url"].ToString();
+            
+            //параметр URL текущей страницы
+            string url = parameters["url"].ToString();
             CancellationToken ct = (CancellationToken)parameters["cancellation_token"];
             CefBrowserWrapperBase cefBrowserWrapper = (CefBrowserWrapperBase)parameters["cef_browser_wrapper"];
             bool devMode = parameters.ContainsKey("dev");
 
-            cefBrowserWrapper.DownloadHandler = DownloadHandler.UseFolder("C:\\Users\\User\\Documents\\ViberDownloads",
+            DownloadScenario(devMode, cefBrowserWrapper, ct);
+            
+            // BasicScenario(devMode, cefBrowserWrapper);
+
+            return retVal;
+        }
+
+        #region Examples
+
+        private void DownloadScenario(bool devMode, CefBrowserWrapperBase cefBrowserWrapper, CancellationToken ct)
+        {
+            ManualResetEventSlim downloadReadyEvent = new ManualResetEventSlim(false);
+
+            cefBrowserWrapper.DownloadHandler = DownloadHandler.UseFolder(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments),
                         (chromiumBrowser, browser, downloadItem, callback) =>
                         {
                             if (downloadItem.IsComplete)
@@ -57,27 +70,25 @@ namespace Plugin
                                 downloadReadyEvent.Set();
                             }
                         });
+            // cefBrowserWrapper.DownloadHandler.OnBeforeDownloadDelegate = null;
 
             cefBrowserWrapper.Click("//a[@id='click_link_id']");
 
-            downloadReadyEvent.Wait(3000,ct);
-
-            //TODO: remove
-            return retVal;
-
-            #region TEMPLATE CODE
-
+            downloadReadyEvent.Wait(3000, ct);
+        }
+        private void BasicScenario(bool devMode, CefBrowserWrapperBase cefBrowserWrapper)
+        {
             // cefBrowserWrapper.ChangeWindowState(FormWindowState.Maximized);
             cefBrowserWrapper.Scroll(100);
-            if(devMode) cefBrowserWrapper.EvaluateScript("alert('Push Enter to continue');"); 
+            if (devMode) cefBrowserWrapper.EvaluateScript("alert('Push Enter to continue');");
 
             cefBrowserWrapper.ScrollToElement("//input[@name='search_name']");
             if (devMode) cefBrowserWrapper.EvaluateScript("alert('Push Enter to continue');");
-            
+
 
             cefBrowserWrapper.SetValue("//input[@name='search_name']", "test1");
             //the same as set value, but imitating real user (real event option in Datacol scenarios)
-            cefBrowserWrapper.SendTextToElement("//input[@name='search_price_from']", "test2"); 
+            cefBrowserWrapper.SendTextToElement("//input[@name='search_price_from']", "test2");
 
             cefBrowserWrapper.SendMouseClickToElement("//input[@id='ctrl-prd-cmp-3942']");
 
@@ -85,10 +96,9 @@ namespace Plugin
 
             cefBrowserWrapper.GetHtml();
 
-            #endregion
-
-            return retVal;
         }
+
+        #endregion
 
         #region Методы и свойства необходимые, для соответствия PluginInterface (обычно не используются при создании плагина)
 
