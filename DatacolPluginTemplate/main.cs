@@ -12,6 +12,7 @@ using CefBrowserWrapper;
 using System.Diagnostics;
 using System.Windows.Forms;
 using CefSharp.Fluent;
+using DatacolPluginTemplate;
 
 namespace Plugin
 {
@@ -49,9 +50,9 @@ namespace Plugin
             CefBrowserWrapperBase cefBrowserWrapper = (CefBrowserWrapperBase)parameters["cef_browser_wrapper"];
             bool devMode = parameters.ContainsKey("dev");
 
-            DownloadScenario(devMode, cefBrowserWrapper, ct);
-            
-            // BasicScenario(devMode, cefBrowserWrapper);
+            BasicScenario(devMode, cefBrowserWrapper);
+
+            // DownloadScenario(devMode, cefBrowserWrapper, ct);
 
             return retVal;
         }
@@ -60,21 +61,23 @@ namespace Plugin
 
         private void DownloadScenario(bool devMode, CefBrowserWrapperBase cefBrowserWrapper, CancellationToken ct)
         {
-            ManualResetEventSlim downloadReadyEvent = new ManualResetEventSlim(false);
+            //ManualResetEventSlim downloadReadyEvent = new ManualResetEventSlim(false);
 
-            cefBrowserWrapper.DownloadHandler = DownloadHandler.UseFolder(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments),
-                        (chromiumBrowser, browser, downloadItem, callback) =>
-                        {
-                            if (downloadItem.IsComplete)
-                            {
-                                downloadReadyEvent.Set();
-                            }
-                        });
-            // cefBrowserWrapper.DownloadHandler.OnBeforeDownloadDelegate = null;
+            //cefBrowserWrapper.DownloadHandler //= new DownloadHandlerDC();
+            //    = DownloadHandler.UseFolder(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments),
+            //            (chromiumBrowser, browser, downloadItem, callback) =>
+            //            {
+            //                browser.GetHost().CloseBrowser(true);
+            //                if (downloadItem.IsComplete)
+            //                {
+            //                    downloadReadyEvent.Set();
+            //                }
+            //            });
+            ////(cefBrowserWrapper.DownloadHandler as DownloadHandler).OnBeforeDownloadDelegate += null;
 
-            cefBrowserWrapper.Click("//a[@id='click_link_id']");
+            //cefBrowserWrapper.Click("//a[@id='click_link_id']");
 
-            downloadReadyEvent.Wait(3000, ct);
+            //downloadReadyEvent.Wait();// 3000, ct);
         }
         private void BasicScenario(bool devMode, CefBrowserWrapperBase cefBrowserWrapper)
         {
