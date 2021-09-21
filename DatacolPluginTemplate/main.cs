@@ -13,6 +13,7 @@ using System.Diagnostics;
 using System.Windows.Forms;
 using CefSharp.Fluent;
 using DatacolPluginTemplate;
+using System.Runtime.InteropServices;
 
 namespace Plugin
 {
@@ -21,6 +22,16 @@ namespace Plugin
     /// </summary>
     public class HandlerClass : PluginInterface.IPlugin
     {
+
+        [DllImport("user32.dll")]
+        [return: MarshalAs(UnmanagedType.Bool)]
+        private static extern bool IsWindowVisible(IntPtr hWnd);
+
+        [DllImport("user32.dll")]
+        private static extern bool ShowWindow(IntPtr hWnd, int nCmdShow);
+
+
+
         /// <summary>
         /// Обработчик плагина
         /// </summary>
@@ -34,8 +45,7 @@ namespace Plugin
         public object pluginHandler(Dictionary<string, object> parameters, out string error)
         {
             string retVal = "";
-            //try
-            //{
+          
             error = "";
 
             //Проверяем правильно ли подключен плагин в программе
@@ -44,41 +54,22 @@ namespace Plugin
                 throw new Exception("Вы используете неверный тип плагина");
             }
             
-            //параметр URL текущей страницы
+            // URL текущей страницы
             string url = parameters["url"].ToString();
+            // токен позволяет отследить, если пользователь остановил работу кампании с помощью ct.IsCancellationRequested
             CancellationToken ct = (CancellationToken)parameters["cancellation_token"];
+            // Обертка для доступа к объекту браузера, в том числе командам вроде Click и т.п.
             CefBrowserWrapperBase cefBrowserWrapper = (CefBrowserWrapperBase)parameters["cef_browser_wrapper"];
             bool devMode = parameters.ContainsKey("dev");
 
-            BasicScenario(devMode, cefBrowserWrapper);
+            // BasicScenario(devMode, cefBrowserWrapper);
 
-            // DownloadScenario(devMode, cefBrowserWrapper, ct);
+            DownloadByClickScenario(cefBrowserWrapper, ct, 50, "//a[@id='click_link_id']");
 
             return retVal;
         }
 
         #region Examples
-
-        private void DownloadScenario(bool devMode, CefBrowserWrapperBase cefBrowserWrapper, CancellationToken ct)
-        {
-            //ManualResetEventSlim downloadReadyEvent = new ManualResetEventSlim(false);
-
-            //cefBrowserWrapper.DownloadHandler //= new DownloadHandlerDC();
-            //    = DownloadHandler.UseFolder(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments),
-            //            (chromiumBrowser, browser, downloadItem, callback) =>
-            //            {
-            //                browser.GetHost().CloseBrowser(true);
-            //                if (downloadItem.IsComplete)
-            //                {
-            //                    downloadReadyEvent.Set();
-            //                }
-            //            });
-            ////(cefBrowserWrapper.DownloadHandler as DownloadHandler).OnBeforeDownloadDelegate += null;
-
-            //cefBrowserWrapper.Click("//a[@id='click_link_id']");
-
-            //downloadReadyEvent.Wait();// 3000, ct);
-        }
         private void BasicScenario(bool devMode, CefBrowserWrapperBase cefBrowserWrapper)
         {
             // cefBrowserWrapper.ChangeWindowState(FormWindowState.Maximized);
@@ -101,6 +92,47 @@ namespace Plugin
 
         }
 
+        private void DownloadByClickScenario(
+            CefBrowserWrapperBase cefBrowserWrapper, 
+            CancellationToken ct,
+            int maxSecondsToWaitForDownload,
+            string xpathOfElementToClickOn)
+        {
+            ManualResetEventSlim downloadReadyEvent = new ManualResetEventSlim(false);
+
+            // To Stop showing download form
+            cefBrowserWrapper.DownloadHandler =
+                DownloadHandler.UseFolder(Environment.GetFolderPath(Environment.SpecialFolder.MyPictures),
+                    (chromiumBrowser, browser, downloadItem, callback) =>
+                    {
+                        if (downloadItem.IsComplete || downloadItem.IsCancelled)
+                        {
+                            if (browser.IsPopup && !browser.HasDocument)
+                            {
+                                browser.GetHost().CloseBrowser(true);
+                                downloadReadyEvent.Set();
+                            }
+                        }
+            //TODO: You may wish to customise this condition to better suite your
+            //requirements. 
+            else if (downloadItem.ReceivedBytes < 100)
+                        {
+                            var popupHwnd = browser.GetHost().GetWindowHandle();
+
+                            var visible = IsWindowVisible(popupHwnd);
+                            if (visible)
+                            {
+                                const int SW_HIDE = 0;
+                                ShowWindow(popupHwnd, SW_HIDE);
+                            }
+                        }
+                    });
+
+            cefBrowserWrapper.Click(xpathOfElementToClickOn);
+
+            downloadReadyEvent.Wait(maxSecondsToWaitForDownload * 1000, ct);
+        }
+       
         #endregion
 
         #region Методы и свойства необходимые, для соответствия PluginInterface (обычно не используются при создании плагина)
