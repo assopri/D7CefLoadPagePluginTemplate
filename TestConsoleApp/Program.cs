@@ -14,11 +14,7 @@ namespace TestConsoleApp
     {
         static void Main(string[] args)
         {
-            // string url = "http://webasyst.synoparser.ru/index.php?categoryID=723";
-            string url = "https://prismotrov.com/kak-voznik-startup-easytext-gde-my-oshiblis-i-chto-delat/";
-
-            // string url = "https://realty.yandex.ru/offer/3051747157343456116/?isExact=YES&source=serp_offers_item";
-            // string url = "https://kolchaka.net/seo/lsi-frazy-chto-eto-zachem-eto-gde-vzyat-kak-ispolzovat-v-tekste/";
+            string url = "http://webasyst.synoparser.ru/index.php?categoryID=723";
             HandlerClass hc = new HandlerClass();
 
             Dictionary<string, object> parameters = new Dictionary<string, object>();
@@ -30,7 +26,7 @@ namespace TestConsoleApp
             parameters.Add("cancellation_token", CancellationToken.None);
             
             CefBrowserWrapperFactoryBase factory = new UniCefBrowserWrapperFactory(true);
-            CefBrowserWrapperBase cefBrowserWrapper = factory.Create(true, true, 10000, true, new SingleBrowserInfo("", ""));
+            CefBrowserWrapperBase cefBrowserWrapper = factory.Create(true, true, 10000, false, new SingleBrowserInfo("", ""));
             parameters.Add("cef_browser_wrapper", cefBrowserWrapper);
 
             try

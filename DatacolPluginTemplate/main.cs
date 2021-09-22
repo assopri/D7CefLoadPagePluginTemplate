@@ -60,11 +60,13 @@ namespace Plugin
             CancellationToken ct = (CancellationToken)parameters["cancellation_token"];
             // Обертка для доступа к объекту браузера, в том числе командам вроде Click и т.п.
             CefBrowserWrapperBase cefBrowserWrapper = (CefBrowserWrapperBase)parameters["cef_browser_wrapper"];
+            // Переменная позволяет добавлять в сценарий элементы для отладки (например сообщения в виде диалогового окна) для случая,
+            // если запуск плагина произведен из тестового приложения, а не из программы Datacol
             bool devMode = parameters.ContainsKey("dev");
 
-            // BasicScenario(devMode, cefBrowserWrapper);
+            BasicScenario(devMode, cefBrowserWrapper);
 
-            DownloadByClickScenario(cefBrowserWrapper, ct, 50, "//a[@id='click_link_id']");
+            // DownloadByClickScenario(cefBrowserWrapper, ct, 50, "//a[@id='click_to_download']");//TODO: замените последний параметр на реальный xpath
 
             return retVal;
         }
