@@ -84,10 +84,6 @@
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="CefBrowserWrapper, Version=1.0.0.0, Culture=neutral, processorArchitecture=AMD64">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>dll\CefBrowserWrapper.dll</HintPath>
-    </Reference>
     <Reference Include="CefSharp, Version=91.1.230.0, Culture=neutral, PublicKeyToken=40c4b6fc221f4138, processorArchitecture=MSIL">
       <HintPath>..\packages\CefSharp.Common.91.1.230\lib\net452\CefSharp.dll</HintPath>
     </Reference>
@@ -119,7 +115,6 @@
     <Content Include="D7LoadPagePluginTemplate.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="dll\CefBrowserWrapper.dll" />
     <Content Include="dll\PluginInterface.dll" />
     <Content Include="plugin_convention.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
@@ -127,6 +122,12 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\DC1\CefBrowserWrapper\CefBrowserWrapper.csproj">
+      <Project>{18a2eb79-5281-4032-80c1-17b567b999a2}</Project>
+      <Name>CefBrowserWrapper</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

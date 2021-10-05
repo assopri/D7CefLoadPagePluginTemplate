@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "D7CefLoadPlugin", "DatacolP
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestConsoleApp", "TestConsoleApp\TestConsoleApp.csproj", "{B4E34953-F09D-473D-AC7E-C3D480061330}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CefBrowserWrapper", "..\..\DC1\CefBrowserWrapper\CefBrowserWrapper.csproj", "{18A2EB79-5281-4032-80C1-17B567B999A2}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -41,6 +43,18 @@ Global
 		{B4E34953-F09D-473D-AC7E-C3D480061330}.Release|x64.Build.0 = Release|Any CPU
 		{B4E34953-F09D-473D-AC7E-C3D480061330}.Release|x86.ActiveCfg = Release|Any CPU
 		{B4E34953-F09D-473D-AC7E-C3D480061330}.Release|x86.Build.0 = Release|Any CPU
+		{18A2EB79-5281-4032-80C1-17B567B999A2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{18A2EB79-5281-4032-80C1-17B567B999A2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{18A2EB79-5281-4032-80C1-17B567B999A2}.Debug|x64.ActiveCfg = Debug|x64
+		{18A2EB79-5281-4032-80C1-17B567B999A2}.Debug|x64.Build.0 = Debug|x64
+		{18A2EB79-5281-4032-80C1-17B567B999A2}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{18A2EB79-5281-4032-80C1-17B567B999A2}.Debug|x86.Build.0 = Debug|Any CPU
+		{18A2EB79-5281-4032-80C1-17B567B999A2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{18A2EB79-5281-4032-80C1-17B567B999A2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{18A2EB79-5281-4032-80C1-17B567B999A2}.Release|x64.ActiveCfg = Release|x64
+		{18A2EB79-5281-4032-80C1-17B567B999A2}.Release|x64.Build.0 = Release|x64
+		{18A2EB79-5281-4032-80C1-17B567B999A2}.Release|x86.ActiveCfg = Release|Any CPU
+		{18A2EB79-5281-4032-80C1-17B567B999A2}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
