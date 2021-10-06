@@ -69,7 +69,17 @@ namespace Plugin
             // BasicScenario(devMode, cefBrowserWrapper);
 
             // DownloadByClickScenario(cefBrowserWrapper, ct, 50, "//a[@id='click_to_download']");//TODO: замените последний параметр на реальный xpath
-            WaitElement("//iframe[@id='profitbase_front_widget']",5, cefBrowserWrapper);
+
+            // GetFrameContent(cefBrowserWrapper, ct);
+
+            return retVal;
+        }
+
+
+        private void GetFrameContent(CefBrowserWrapperBase cefBrowserWrapper,
+            CancellationToken ct)
+        {
+            cefBrowserWrapper.WaitElement("//iframe[@id='profitbase_front_widget']", 5);
             if (!cefBrowserWrapper.ElementExists("//iframe[@id='profitbase_front_widget']"))
             {
                 throw new Exception("need wait");
@@ -79,7 +89,7 @@ namespace Plugin
             var identifiers = myIWebBrowser.GetBrowser().GetFrameIdentifiers();
             IFrame frame = myIWebBrowser.GetBrowser().GetFrame(identifiers[1]);
 
-            WaitElementInFrame("//span[@class='apartment-short__rooms']", 10, frame);
+            cefBrowserWrapper.WaitElement("//span[@class='apartment-short__rooms']", 10, frame);
 
             Task<string> task = frame.GetSourceAsync();
 
@@ -90,57 +100,8 @@ namespace Plugin
             retVal = task.Result;
 
             File.WriteAllText("frame_content.txt", retVal);
-            return retVal;
         }
-        private bool WaitElement(string xpath, int seconds, CefBrowserWrapperBase cefBrowserWrapper)
-        {
-            DateTime startDT = DateTime.Now;
 
-            while (true)
-            {
-                if (!cefBrowserWrapper.ElementExists(xpath))
-                {
-                    if ((DateTime.Now - startDT).TotalMilliseconds >
-                        seconds * 1000) return false;
-
-                    Thread.Sleep(600);
-
-                    continue;
-                }
-
-                return true;
-
-            }
-        }
-        // TODO: maybe implement in other way, like waitelement implemented in nano
-        public virtual bool ElementExistsInFrame(string xpath, IFrame frame)
-        {
-            var result = frame.EvaluateScriptAsync(string.Format("document.evaluate('{0}', document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue.innerHTML;", xpath.Replace('\'', '\"')));
-            result.Wait();
-
-            if (!result.Result.Success) return false;
-            return true;
-        }
-        private bool WaitElementInFrame(string xpath, int seconds, IFrame frame)
-        {
-            DateTime startDT = DateTime.Now;
-
-            while (true)
-            {
-                if (!ElementExistsInFrame(xpath, frame))
-                {
-                    if ((DateTime.Now - startDT).TotalMilliseconds >
-                        seconds * 1000) return false;
-
-                    Thread.Sleep(600);
-
-                    continue;
-                }
-
-                return true;
-
-            }
-        }
 
         #region Examples
 

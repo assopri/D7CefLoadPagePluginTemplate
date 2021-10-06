@@ -14,9 +14,11 @@ namespace TestConsoleApp
     {
         static void Main(string[] args)
         {
-            string url = "https://dom-kit.ru/#/profitbase/house/32806/bigGrid?filter=property.status:AVAILABLE";
-
-                //"http://webasyst.synoparser.ru/index.php?categoryID=723";
+            // for GetFrameContent
+            string url = 
+            //"https://dom-kit.ru/#/profitbase/house/32806/bigGrid?filter=property.status:AVAILABLE";
+            // for basic   
+            "http://webasyst.synoparser.ru/index.php?categoryID=723";
 
             HandlerClass hc = new HandlerClass();
 
